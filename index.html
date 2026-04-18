@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Trip to spiti valley</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f5f4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Trip to spiti velly</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
@@ -20,24 +22,41 @@
       --shadow: rgba(28, 25, 23, 0.06);
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
-    .layout { display: flex; flex-direction: column; height: 100%; animation: layoutFade 0.45s ease-out; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    .layout {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      min-height: 100dvh;
+      animation: layoutFade 0.45s ease-out;
+    }
     @keyframes layoutFade {
       from { opacity: 0.92; }
       to { opacity: 1; }
     }
     header {
-      flex-shrink: 0; padding: 0.75rem 1rem;
+      flex-shrink: 0;
+      padding: 0.75rem 1rem;
+      padding-top: max(0.75rem, env(safe-area-inset-top));
+      padding-left: max(1rem, env(safe-area-inset-left));
+      padding-right: max(1rem, env(safe-area-inset-right));
       background: var(--panel);
       border-bottom: 1px solid var(--border);
       box-shadow: 0 1px 0 var(--shadow);
-      display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem;
     }
-    header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.02em; }
-    header p { margin: 0; font-size: 0.8rem; color: var(--muted); width: 100%; }
-    @media (min-width: 720px) {
-      header p { width: auto; margin-left: auto; }
-    }
+    header h1 { margin: 0; font-size: clamp(1rem, 4vw, 1.15rem); font-weight: 600; letter-spacing: 0.02em; }
     .main { flex: 1; display: flex; min-height: 0; }
     .sidebar {
       width: min(380px, 100%); flex-shrink: 0;
@@ -228,6 +247,92 @@
       50% { box-shadow: 0 0 0 10px rgba(13, 148, 136, 0), 0 2px 8px rgba(0, 0, 0, 0.15); }
     }
 
+    /* —— Mobile / narrow screens —— */
+    @media (max-width: 719px) {
+      .main {
+        flex-direction: column;
+      }
+      .map-wrap {
+        order: -1;
+        flex: 0 0 auto;
+        width: 100%;
+        height: clamp(240px, 42vh, 400px);
+        min-height: clamp(240px, 42vh, 400px);
+      }
+      #map {
+        height: 100%;
+        min-height: 100%;
+      }
+      .sidebar {
+        width: 100%;
+        max-height: none;
+        border-right: none;
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+      .day-toolbar {
+        padding: 0.65rem 0.75rem;
+        padding-bottom: max(0.65rem, env(safe-area-inset-bottom));
+        -webkit-overflow-scrolling: touch;
+      }
+      .day-toolbar label {
+        font-size: 0.68rem;
+        line-height: 1.35;
+      }
+      .day-chips {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .day-chips button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.8rem;
+        -webkit-tap-highlight-color: transparent;
+      }
+      .day-list {
+        -webkit-overflow-scrolling: touch;
+        padding: 0.65rem 0.75rem;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+      }
+      .legend {
+        font-size: 0.68rem;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+      }
+      .leaflet-control-zoom a {
+        min-width: 36px;
+        min-height: 36px;
+        line-height: 36px;
+      }
+      .modal-backdrop {
+        padding: 0.5rem;
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+        align-items: flex-end;
+      }
+      .modal-wrap {
+        max-width: 100% !important;
+        width: 100% !important;
+        max-height: min(92dvh, 100%);
+      }
+      .modal {
+        max-height: min(92dvh, 100%);
+        border-radius: 12px 12px 0 0;
+      }
+      .modal-body {
+        max-height: min(40vh, 280px);
+      }
+      .gallery-viewport {
+        max-height: min(38vh, 280px);
+      }
+      .gallery-shell img {
+        max-height: min(38vh, 280px);
+      }
+      .modal-close {
+        min-width: 44px;
+        min-height: 44px;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .layout { animation: none; }
       .day-chips button, .day-chips button.active { transition: none; animation: none; }
@@ -244,9 +349,6 @@
   <div class="layout">
     <header>
       <h1>Spiti Valley</h1>
-      <p>
-        Lines on the map are simplified paths between stops (not live turn-by-turn road geometry). Typical km &amp; drive times appear under each day. Layers (top-right): Satellite / Terrain / Street · Earlier legs stay coloured; selected day is thicker.
-      </p>
     </header>
     <div class="main">
       <aside class="sidebar">
@@ -1172,7 +1274,19 @@
       spitiBtn.addEventListener("click", function () { setDayFilter([5, 6, 7, 8], null); });
       chips.appendChild(spitiBtn);
 
+      function invalidateMapSize() {
+        if (map) map.invalidateSize({ animate: false });
+      }
+      window.addEventListener("resize", invalidateMapSize);
+      window.addEventListener("orientationchange", function () {
+        setTimeout(invalidateMapSize, 400);
+      });
+      if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", invalidateMapSize);
+      }
+
       setDayFilter(null, null);
+      setTimeout(invalidateMapSize, 150);
     }
 
     initMap();
