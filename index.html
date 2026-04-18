@@ -7,16 +7,20 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
-      --bg: #0f1419;
-      --panel: #1a2332;
-      --text: #e8ecf1;
-      --muted: #8b9cb3;
-      --accent: #3d9cf0;
-      --accent-dim: #2563a8;
-      --day-pill: #243044;
+      --bg: #f5f5f4;
+      --panel: #ffffff;
+      --text: #292524;
+      --text-strong: #1c1917;
+      --muted: #78716c;
+      --accent: #0d9488;
+      --accent-dim: #ccfbf1;
+      --accent-border: #99f6e4;
+      --day-pill: #fafaf9;
+      --border: #e7e5e4;
+      --shadow: rgba(28, 25, 23, 0.06);
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); }
+    html, body { height: 100%; margin: 0; font-family: system-ui, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); -webkit-font-smoothing: antialiased; }
     .layout { display: flex; flex-direction: column; height: 100%; animation: layoutFade 0.45s ease-out; }
     @keyframes layoutFade {
       from { opacity: 0.92; }
@@ -24,8 +28,9 @@
     }
     header {
       flex-shrink: 0; padding: 0.75rem 1rem;
-      background: linear-gradient(180deg, var(--panel) 0%, #151c28 100%);
-      border-bottom: 1px solid #2a3545;
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 0 var(--shadow);
       display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
     }
     header h1 { margin: 0; font-size: 1.1rem; font-weight: 600; letter-spacing: 0.02em; }
@@ -36,20 +41,20 @@
     .main { flex: 1; display: flex; min-height: 0; }
     .sidebar {
       width: min(380px, 100%); flex-shrink: 0;
-      background: var(--panel); border-right: 1px solid #2a3545;
+      background: var(--panel); border-right: 1px solid var(--border);
       display: flex; flex-direction: column; max-height: 45vh;
     }
     @media (min-width: 900px) {
       .sidebar { max-height: none; }
     }
     .day-toolbar {
-      padding: 0.75rem; border-bottom: 1px solid #2a3545;
+      padding: 0.75rem; border-bottom: 1px solid var(--border);
       overflow-x: auto; flex-shrink: 0;
     }
     .day-toolbar label { display: block; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
     .day-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; }
     .day-chips button {
-      border: 1px solid #3a4a60; background: var(--day-pill); color: var(--text);
+      border: 1px solid var(--border); background: var(--day-pill); color: var(--text);
       padding: 0.35rem 0.55rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer;
       transition: background 0.2s ease, border-color 0.2s ease, transform 0.18s ease, box-shadow 0.2s ease;
     }
@@ -57,19 +62,19 @@
     .day-chips button:active { transform: translateY(0); }
     .day-chips button.active {
       background: var(--accent-dim); border-color: var(--accent); font-weight: 600;
-      box-shadow: 0 0 0 2px rgba(61, 156, 240, 0.35), 0 4px 14px rgba(61, 156, 240, 0.25);
+      box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25), 0 4px 12px rgba(13, 148, 136, 0.12);
       animation: chipActivate 0.45s ease-out;
     }
     @keyframes chipActivate {
-      0% { box-shadow: 0 0 0 0 rgba(61, 156, 240, 0.5); }
-      60% { box-shadow: 0 0 0 6px rgba(61, 156, 240, 0.12); }
-      100% { box-shadow: 0 0 0 2px rgba(61, 156, 240, 0.35), 0 4px 14px rgba(61, 156, 240, 0.25); }
+      0% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.35); }
+      60% { box-shadow: 0 0 0 6px rgba(13, 148, 136, 0.08); }
+      100% { box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.25), 0 4px 12px rgba(13, 148, 136, 0.12); }
     }
     .day-list { flex: 1; overflow-y: auto; padding: 0.75rem; scroll-behavior: smooth; }
     .day-section { margin-bottom: 1rem; }
     .day-section h3 { margin: 0 0 0.5rem; font-size: 0.85rem; color: var(--accent); }
     .itinerary-day {
-      margin-bottom: 1.35rem; padding-bottom: 1rem; border-bottom: 1px solid #243044;
+      margin-bottom: 1.35rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);
       animation: itineraryEnter 0.42s ease backwards;
     }
     .itinerary-day:nth-child(1) { animation-delay: 0.03s; }
@@ -85,43 +90,48 @@
     .itinerary-day:last-child { border-bottom: none; }
     .itinerary-day h3 { margin: 0 0 0.6rem; font-size: 0.95rem; color: var(--accent); }
     .route-leg-meta {
-      font-size: 0.78rem; line-height: 1.45; color: #b8c5d6;
-      background: rgba(61, 156, 240, 0.08); border: 1px solid rgba(61, 156, 240, 0.22);
+      font-size: 0.78rem; line-height: 1.45; color: var(--text);
+      background: var(--accent-dim); border: 1px solid var(--accent-border);
       border-radius: 8px; padding: 0.5rem 0.65rem; margin-bottom: 0.65rem;
     }
-    .route-leg-meta .route-leg-main { color: #e8eef5; font-weight: 500; }
+    .route-leg-meta .route-leg-main { color: var(--text-strong); font-weight: 600; }
     .route-leg-meta .route-leg-note { margin-top: 0.35rem; font-size: 0.72rem; color: var(--muted); line-height: 1.4; }
     .itinerary-body {
-      font-size: 0.82rem; line-height: 1.58; color: #c5d0de;
+      font-size: 0.82rem; line-height: 1.58; color: var(--text);
       white-space: pre-wrap;
       word-break: break-word;
+    }
+    .itinerary-body strong.place-name,
+    .modal-prose strong.place-name {
+      font-weight: 650;
+      color: var(--text-strong);
     }
     .itinerary-places { margin-top: 0.85rem; font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
     .place-link {
       background: none; border: none; color: var(--accent); cursor: pointer;
       padding: 0; font: inherit; text-decoration: underline; text-underline-offset: 2px;
     }
-    .place-link:hover { color: #7cb8f0; }
+    .place-link:hover { color: #0f766e; }
     .map-wrap { flex: 1; position: relative; min-height: 280px; }
-    #map { width: 100%; height: 100%; min-height: 280px; background: #0a0e14; }
-    .leaflet-container { background: #0a0e14; font-family: inherit; }
+    #map { width: 100%; height: 100%; min-height: 280px; background: #e7e5e4; }
+    .leaflet-container { background: #d6d3d1; font-family: inherit; }
     /* Permanent place names (day / preset selected) — not hover popups */
     .leaflet-tooltip.place-label-tooltip {
-      background: rgba(15, 20, 28, 0.92);
-      color: #e8ecf1;
-      border: 1px solid #3d9cf0;
+      background: #ffffff;
+      color: var(--text-strong);
+      border: 1px solid var(--border);
       border-radius: 6px;
       padding: 3px 8px;
       font-size: 0.72rem;
       font-weight: 600;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 2px 10px rgba(28, 25, 23, 0.08);
       pointer-events: none;
     }
     .leaflet-tooltip.place-label-tooltip::before { display: none; }
-    .leaflet-control-layers { background: rgba(26, 35, 50, 0.95); color: var(--text); border: 1px solid #3a4a60; border-radius: 8px; }
+    .leaflet-control-layers { background: rgba(255, 255, 255, 0.96); color: var(--text); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 12px var(--shadow); }
     .leaflet-control-layers-list { color: var(--text); }
     .legend {
-      font-size: 0.7rem; color: var(--muted); padding: 0.5rem 0.75rem; border-top: 1px solid #2a3545;
+      font-size: 0.7rem; color: var(--muted); padding: 0.5rem 0.75rem; border-top: 1px solid var(--border);
     }
     .modal-backdrop {
       display: none; position: fixed; inset: 0; z-index: 20000;
@@ -130,17 +140,17 @@
     }
     .modal-backdrop.open {
       display: flex;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(28, 25, 23, 0.4);
       animation: backdropIn 0.3s ease forwards;
     }
     @keyframes backdropIn {
-      from { background: rgba(0, 0, 0, 0); }
-      to { background: rgba(0, 0, 0, 0.72); }
+      from { background: rgba(28, 25, 23, 0); }
+      to { background: rgba(28, 25, 23, 0.4); }
     }
     .modal {
       background: var(--panel); border-radius: 12px; max-width: 600px; width: 100%;
       max-height: 90vh; overflow: hidden; display: flex; flex-direction: column;
-      border: 1px solid #3a4a60; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border: 1px solid var(--border); box-shadow: 0 24px 48px rgba(28, 25, 23, 0.12);
     }
     .modal-backdrop.open .modal {
       animation: modalPop 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -149,7 +159,7 @@
       0% { transform: scale(0.94) translateY(16px); opacity: 0; }
       100% { transform: scale(1) translateY(0); opacity: 1; }
     }
-    .gallery-shell { position: relative; background: #0a0e14; }
+    .gallery-shell { position: relative; background: #f5f5f4; }
     .gallery-viewport {
       touch-action: pan-y; user-select: none; cursor: grab;
       min-height: 200px; max-height: min(42vh, 320px); display: flex; align-items: center; justify-content: center;
@@ -157,27 +167,29 @@
     .gallery-viewport:active { cursor: grabbing; }
     .gallery-shell img {
       width: 100%; height: auto; max-height: min(42vh, 320px); object-fit: contain;
-      background: #0a0e14; display: block; pointer-events: none;
+      background: #f5f5f4; display: block; pointer-events: none;
     }
     .gallery-nav {
       position: absolute; top: 50%; transform: translateY(-50%); z-index: 3;
-      width: 40px; height: 40px; border: none; border-radius: 50%;
-      background: rgba(0,0,0,0.55); color: #fff; font-size: 1.5rem; line-height: 1; cursor: pointer;
+      width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%;
+      background: rgba(255, 255, 255, 0.95); color: var(--text-strong); font-size: 1.5rem; line-height: 1; cursor: pointer;
       display: flex; align-items: center; justify-content: center; padding: 0 0 2px 0;
+      box-shadow: 0 2px 8px var(--shadow);
     }
-    .gallery-nav:hover { background: rgba(61, 156, 240, 0.45); }
+    .gallery-nav:hover { background: rgba(13, 148, 136, 0.35); }
     .gallery-nav:disabled { opacity: 0.25; cursor: default; }
     .gallery-prev { left: 0.5rem; }
     .gallery-next { right: 0.5rem; }
     .gallery-meta {
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
       padding: 0.35rem 0.5rem; font-size: 0.75rem; color: var(--muted);
-      background: rgba(0,0,0,0.25);
+      background: rgba(245, 245, 244, 0.95);
+      border-top: 1px solid var(--border);
     }
     .gallery-dots { display: flex; gap: 0.35rem; align-items: center; }
     .gallery-dots button {
       width: 8px; height: 8px; padding: 0; border: none; border-radius: 50%;
-      background: #4a5a70; cursor: pointer;
+      background: #d6d3d1; cursor: pointer;
     }
     .gallery-dots button.active { background: var(--accent); transform: scale(1.15); }
     .modal-body { padding: 1rem 1.1rem; overflow-y: auto; max-height: min(52vh, 440px); }
@@ -187,23 +199,23 @@
     }
     .modal-section-title.spaced { margin-top: 1rem; }
     .modal-prose {
-      font-size: 0.82rem; line-height: 1.55; color: #c5d0de; white-space: pre-wrap; word-break: break-word;
+      font-size: 0.82rem; line-height: 1.55; color: var(--text); white-space: pre-wrap; word-break: break-word;
       margin: 0 0 0.35rem;
     }
     .modal-body h2 { margin: 0 0 0.35rem; font-size: 1.15rem; }
     .modal-meta { font-size: 0.8rem; color: var(--accent); margin-bottom: 0.75rem; }
-    .modal-body p { margin: 0 0 0.65rem; font-size: 0.9rem; line-height: 1.5; color: #c5d0de; }
+    .modal-body p { margin: 0 0 0.65rem; font-size: 0.9rem; line-height: 1.5; color: var(--text); }
     .modal-close {
       position: absolute; top: 0.75rem; right: 0.75rem; z-index: 2;
       width: 36px; height: 36px; border: none; border-radius: 8px;
-      background: rgba(0,0,0,0.55); color: #fff; font-size: 1.25rem; cursor: pointer; line-height: 1;
+      background: rgba(255, 255, 255, 0.9); color: var(--text); border: 1px solid var(--border); font-size: 1.25rem; cursor: pointer; line-height: 1;
     }
     .modal-wrap { position: relative; }
     .img-credit { font-size: 0.7rem; color: var(--muted); margin-top: 0.5rem; }
 
     /* Focused route segment — glow on SVG path (Leaflet) */
     .leaflet-overlay-pane svg path.trip-route-focus {
-      filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 10px rgba(61, 156, 240, 0.95)) drop-shadow(0 0 18px rgba(61, 156, 240, 0.45));
+      filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 8px rgba(13, 148, 136, 0.85)) drop-shadow(0 0 16px rgba(13, 148, 136, 0.35));
       stroke-linecap: round;
       stroke-linejoin: round;
     }
@@ -212,8 +224,8 @@
       animation: pinGlow 2.2s ease-in-out infinite;
     }
     @keyframes pinGlow {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(61, 156, 240, 0.55), 0 2px 8px rgba(0, 0, 0, 0.5); }
-      50% { box-shadow: 0 0 0 10px rgba(61, 156, 240, 0), 0 2px 8px rgba(0, 0, 0, 0.5); }
+      0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.45), 0 2px 8px rgba(0, 0, 0, 0.15); }
+      50% { box-shadow: 0 0 0 10px rgba(13, 148, 136, 0), 0 2px 8px rgba(0, 0, 0, 0.15); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -221,7 +233,7 @@
       .day-chips button, .day-chips button.active { transition: none; animation: none; }
       .day-chips button.active { box-shadow: none; }
       .itinerary-day { animation: none; }
-      .modal-backdrop.open { animation: none; background: rgba(0, 0, 0, 0.72); }
+      .modal-backdrop.open { animation: none; background: rgba(28, 25, 23, 0.4); }
       .modal-backdrop.open .modal { animation: none; }
       .trip-pin-emphasis .pin-core { animation: none; }
       .leaflet-overlay-pane svg path.trip-route-focus { filter: none; }
@@ -560,9 +572,16 @@
       focusRouteAnimFrame = requestAnimationFrame(tick);
     }
 
+    function escapeHtml(s) {
+      if (s == null || s === "") return "";
+      var d = document.createElement("div");
+      d.textContent = s;
+      return d.innerHTML;
+    }
+
     function placeholderImageUrl(title) {
       var t = title.length > 36 ? title.slice(0, 33) + "…" : title;
-      return "https://placehold.co/800x480/1a2332/8b9cb3/png?font=source-sans-pro&text=" + encodeURIComponent(t);
+      return "https://placehold.co/800x480/f5f5f4/57534e/png?font=source-sans-pro&text=" + encodeURIComponent(t);
     }
 
     /** Slides from PLACE_PHOTO_MANIFEST (scan_place_photos.py) + optional extraGallery. */
@@ -679,13 +698,13 @@
       var about =
         typeof PLACE_DETAILS !== "undefined" && PLACE_DETAILS[place.id]
           ? PLACE_DETAILS[place.id]
-          : (place.summary || "");
-      document.getElementById("modalPlaceDetail").textContent = about;
+          : escapeHtml(place.summary || "");
+      document.getElementById("modalPlaceDetail").innerHTML = about;
       var dayPlan =
         typeof DAY_ITINERARY !== "undefined" && DAY_ITINERARY[place.day]
           ? DAY_ITINERARY[place.day]
           : "";
-      document.getElementById("modalDayPlan").textContent = dayPlan;
+      document.getElementById("modalDayPlan").innerHTML = dayPlan || "";
       galleryState.place = place;
       galleryState.slides = getSlides(place);
       galleryState.index = 0;
@@ -1005,7 +1024,7 @@
         }
         var body = document.createElement("div");
         body.className = "itinerary-body";
-        body.textContent = src[d] || "Add this day in itinerary.js (DAY_ITINERARY[" + d + "]).";
+        body.innerHTML = src[d] || "Add this day in itinerary.js (DAY_ITINERARY[" + d + "]).";
         section.appendChild(body);
         var places = PLACES.filter(function (p) { return p.day === d; });
         if (places.length) {
