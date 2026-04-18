@@ -155,9 +155,6 @@
     .leaflet-tooltip.place-label-tooltip::before { display: none; }
     .leaflet-control-layers { background: rgba(255, 255, 255, 0.96); color: var(--text); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 2px 12px var(--shadow); }
     .leaflet-control-layers-list { color: var(--text); }
-    .legend {
-      font-size: 0.7rem; color: var(--muted); padding: 0.5rem 0.75rem; border-top: 1px solid var(--border);
-    }
     .modal-backdrop {
       display: none; position: fixed; inset: 0; z-index: 20000;
       background: rgba(0, 0, 0, 0); align-items: center; justify-content: center; padding: 1rem;
@@ -302,10 +299,6 @@
         padding: 0.65rem 0.75rem;
         padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
       }
-      .legend {
-        font-size: 0.68rem;
-        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-      }
       .leaflet-control-zoom a {
         min-width: 36px;
         min-height: 36px;
@@ -347,8 +340,7 @@
         max-height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
         height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
       }
-      .layout.mobile-map-focus .day-list,
-      .layout.mobile-map-focus .legend {
+      .layout.mobile-map-focus .day-list {
         display: none !important;
       }
       .layout.mobile-map-focus .map-wrap {
@@ -414,9 +406,6 @@
           </button>
         </div>
         <div class="day-list" id="dayList"></div>
-        <div class="legend">
-          Map polylines follow rough waypoints — use km/time as planning ballpark. Photos: folders <code>place-photos/day-NN/&lt;place_id&gt;/</code>, then <code>python3 scan_place_photos.py</code> (see <code>place-photos/README.txt</code>). Pin = gallery. Basemap: Esri / OpenTopoMap / OSM.
-        </div>
       </aside>
       <div class="map-wrap">
         <div id="map"></div>
