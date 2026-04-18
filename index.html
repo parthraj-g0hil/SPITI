@@ -24,6 +24,7 @@
     * { box-sizing: border-box; }
     html, body {
       height: 100%;
+      min-height: 100dvh;
       margin: 0;
       font-family: system-ui, "Segoe UI", Roboto, sans-serif;
       background: var(--bg);
@@ -34,7 +35,7 @@
     .layout {
       display: flex;
       flex-direction: column;
-      min-height: 100%;
+      height: 100%;
       min-height: 100dvh;
       animation: layoutFade 0.45s ease-out;
     }
@@ -57,7 +58,12 @@
       gap: 0.75rem;
     }
     header h1 { margin: 0; font-size: clamp(1rem, 4vw, 1.15rem); font-weight: 600; letter-spacing: 0.02em; }
-    .main { flex: 1; display: flex; min-height: 0; }
+    .main {
+      flex: 1 1 auto;
+      display: flex;
+      min-height: 0;
+      min-height: min(60vh, 560px);
+    }
     .sidebar {
       width: min(380px, 100%); flex-shrink: 0;
       background: var(--panel); border-right: 1px solid var(--border);
@@ -251,6 +257,7 @@
     @media (max-width: 719px) {
       .main {
         flex-direction: column;
+        min-height: 0;
       }
       .map-wrap {
         order: -1;
@@ -331,6 +338,53 @@
         min-width: 44px;
         min-height: 44px;
       }
+
+      /* Big map when a single day is selected — itinerary collapsed */
+      .layout.mobile-map-focus .main {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: hidden;
+        max-height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
+        height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
+      }
+      .layout.mobile-map-focus .day-list,
+      .layout.mobile-map-focus .legend {
+        display: none !important;
+      }
+      .layout.mobile-map-focus .map-wrap {
+        flex: 1 1 auto;
+        width: 100%;
+        min-height: 0;
+        height: auto;
+        max-height: none;
+      }
+      .layout.mobile-map-focus .sidebar {
+        flex: 0 0 auto;
+        max-height: none;
+      }
+      .layout.mobile-map-focus .day-toolbar label {
+        display: none;
+      }
+      .mobile-itinerary-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 0.55rem 0.75rem;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--text-strong);
+        background: var(--accent-dim);
+        border: 1px solid var(--accent-border);
+        border-radius: 8px;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        min-height: 44px;
+      }
+      .layout.mobile-map-focus .mobile-itinerary-toggle {
+        display: flex;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -355,6 +409,9 @@
         <div class="day-toolbar">
           <label>Pick a day — itinerary + typical km/time below · map shows simplified route traces</label>
           <div class="day-chips" id="dayChips"></div>
+          <button type="button" class="mobile-itinerary-toggle" id="mobileItineraryToggle" aria-controls="dayList">
+            Show full itinerary
+          </button>
         </div>
         <div class="day-list" id="dayList"></div>
         <div class="legend">
@@ -641,6 +698,37 @@
     var selectedFocusDay = null;
     var focusRouteAnimFrame = null;
     var focusRoutePhase = 0;
+    /** Fallback when bounds are empty or the map container had zero size during fit. */
+    var DEFAULT_MAP_CENTER = [31.45, 77.6];
+    var DEFAULT_MAP_ZOOM = 7;
+
+    function invalidateMapSize() {
+      if (map) map.invalidateSize({ animate: false });
+    }
+
+    /** After sidebar/layout changes, Leaflet needs a real container size before fitBounds. */
+    function scheduleFitMap() {
+      if (!map) return;
+      map.invalidateSize({ animate: false });
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          map.invalidateSize({ animate: false });
+          fitMapToView();
+          map.invalidateSize({ animate: false });
+        });
+      });
+    }
+
+    function syncMobileMapFocus() {
+      var layout = document.querySelector(".layout");
+      if (!layout) return;
+      var narrow = window.matchMedia("(max-width: 719px)").matches;
+      if (narrow && selectedFocusDay !== null) {
+        layout.classList.add("mobile-map-focus");
+      } else {
+        layout.classList.remove("mobile-map-focus");
+      }
+    }
 
     function stopFocusRouteAnim() {
       if (focusRouteAnimFrame) {
@@ -1002,12 +1090,21 @@
     }
 
     function flyOrFitBounds(paddedBounds, maxZoom, duration) {
-      if (!map || !paddedBounds || !paddedBounds.isValid()) return;
-      var dur = duration != null ? duration : 0.88;
-      if (!prefersReducedMotion() && typeof map.flyToBounds === "function") {
-        map.flyToBounds(paddedBounds, { maxZoom: maxZoom, duration: dur, easeLinearity: 0.22 });
-      } else {
-        map.fitBounds(paddedBounds, { maxZoom: maxZoom, animate: !prefersReducedMotion() });
+      if (!map) return;
+      if (!paddedBounds || !paddedBounds.isValid()) {
+        map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+        return;
+      }
+      var mz = maxZoom != null ? maxZoom : 10;
+      var useAnimate = !prefersReducedMotion() && duration > 0;
+      try {
+        map.fitBounds(paddedBounds, {
+          padding: [20, 20],
+          maxZoom: mz,
+          animate: useAnimate
+        });
+      } catch (e) {
+        map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
       }
     }
 
@@ -1022,7 +1119,11 @@
           });
         });
         extendBoundsWithPlaces(bounds, null);
-        flyOrFitBounds(bounds.pad(0.08), 8, 0.85);
+        if (bounds.isValid()) {
+          flyOrFitBounds(bounds.pad(0.08), 8, 0.85);
+        } else {
+          map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+        }
         return;
       }
 
@@ -1037,6 +1138,15 @@
         extendBoundsWithPlaces(bounds, selectedFocusDay);
         if (bounds.isValid()) {
           flyOrFitBounds(bounds.pad(0.12), 11, 0.95);
+        } else {
+          var dayPlaces = PLACES.filter(function (p) {
+            return p.day === selectedFocusDay;
+          });
+          if (dayPlaces.length) {
+            map.setView([dayPlaces[0].lat, dayPlaces[0].lng], 10);
+          } else {
+            map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+          }
         }
         return;
       }
@@ -1053,7 +1163,11 @@
           bounds.extend([p.lat, p.lng]);
         }
       });
-      if (bounds.isValid()) flyOrFitBounds(bounds.pad(0.1), 9, 0.88);
+      if (bounds.isValid()) {
+        flyOrFitBounds(bounds.pad(0.1), 9, 0.88);
+      } else {
+        map.setView(DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM);
+      }
     }
 
     function sameDaySet(a, b) {
@@ -1086,8 +1200,13 @@
       });
 
       updateRouteStyles();
-      fitMapToView();
       renderDayList();
+      syncMobileMapFocus();
+      scheduleFitMap();
+      setTimeout(function () {
+        invalidateMapSize();
+        fitMapToView();
+      }, 320);
     }
 
     function renderDayList() {
@@ -1274,19 +1393,63 @@
       spitiBtn.addEventListener("click", function () { setDayFilter([5, 6, 7, 8], null); });
       chips.appendChild(spitiBtn);
 
-      function invalidateMapSize() {
-        if (map) map.invalidateSize({ animate: false });
+      var resizeFitTimer = null;
+      function onResizeRefit() {
+        invalidateMapSize();
+        fitMapToView();
       }
-      window.addEventListener("resize", invalidateMapSize);
+      window.addEventListener("resize", function () {
+        invalidateMapSize();
+        if (resizeFitTimer) clearTimeout(resizeFitTimer);
+        resizeFitTimer = setTimeout(function () {
+          resizeFitTimer = null;
+          onResizeRefit();
+        }, 100);
+      });
       window.addEventListener("orientationchange", function () {
-        setTimeout(invalidateMapSize, 400);
+        setTimeout(function () {
+          invalidateMapSize();
+          scheduleFitMap();
+        }, 400);
       });
       if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", invalidateMapSize);
+        window.visualViewport.addEventListener("resize", function () {
+          invalidateMapSize();
+          if (resizeFitTimer) clearTimeout(resizeFitTimer);
+          resizeFitTimer = setTimeout(function () {
+            resizeFitTimer = null;
+            onResizeRefit();
+          }, 100);
+        });
+      }
+
+      var mobileItineraryToggle = document.getElementById("mobileItineraryToggle");
+      if (mobileItineraryToggle) {
+        mobileItineraryToggle.addEventListener("click", function () {
+          var layout = document.querySelector(".layout");
+          if (layout) layout.classList.remove("mobile-map-focus");
+          setTimeout(function () {
+            invalidateMapSize();
+            fitMapToView();
+          }, 350);
+          var dayListEl = document.getElementById("dayList");
+          if (dayListEl) {
+            dayListEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
       }
 
       setDayFilter(null, null);
-      setTimeout(invalidateMapSize, 150);
+      setTimeout(function () {
+        invalidateMapSize();
+        scheduleFitMap();
+      }, 200);
+      window.addEventListener("load", function () {
+        setTimeout(function () {
+          invalidateMapSize();
+          fitMapToView();
+        }, 80);
+      });
     }
 
     initMap();
