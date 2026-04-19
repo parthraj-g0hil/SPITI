@@ -24,12 +24,22 @@ window.PLACE_PHOTO_MANIFEST = {
     "place-photos/day-03/d3a/shimla-hills-and-jakhu.jpg"
   ],
   "d3b": [
-    "place-photos/day-03/d3b/296097681Narkanda_Skiing_Point_Main.jpg",
-    "place-photos/day-03/d3b/29609797Hatu.jpg",
-    "place-photos/day-03/d3b/3025753c3a7c75a810c94ddba20dd9db.jpg",
-    "place-photos/day-03/d3b/9085ac_4344798f237e478eb31fddbbb7791568~mv2.jpg",
-    "place-photos/day-03/d3b/Narkanda.jpg",
-    "place-photos/day-03/d3b/chandigarh-shimla-narkanda-chandigarh-3-night-4-days-taxi-tour-package.webp",
-    "place-photos/day-03/d3b/narkanda.jpg"
+    "place-photos/day-03/d3b/183128172_80e060c6cf_b.jpg",
+    "place-photos/day-03/d3b/National_Highway_22_-_Kufri_2014-05-08_1714.JPG",
+    "place-photos/day-03/d3b/caption.jpg",
+    "place-photos/day-03/d3b/deal_iimage22735-1.jpg",
+    "place-photos/day-03/d3b/himachal-1.jpg",
+    "place-photos/day-03/d3b/how-reach-kufri.jpg",
+    "place-photos/day-03/d3b/shimla-to-kufri-distance.webp",
+    "place-photos/day-03/d3b/the-kurfi-mountains.jpg"
+  ],
+  "d3c": [
+    "place-photos/day-03/d3c/296097681Narkanda_Skiing_Point_Main.jpg",
+    "place-photos/day-03/d3c/29609797Hatu.jpg",
+    "place-photos/day-03/d3c/3025753c3a7c75a810c94ddba20dd9db.jpg",
+    "place-photos/day-03/d3c/9085ac_4344798f237e478eb31fddbbb7791568~mv2.jpg",
+    "place-photos/day-03/d3c/Narkanda.jpg",
+    "place-photos/day-03/d3c/chandigarh-shimla-narkanda-chandigarh-3-night-4-days-taxi-tour-package.webp",
+    "place-photos/day-03/d3c/narkanda.jpg"
   ]
 };
