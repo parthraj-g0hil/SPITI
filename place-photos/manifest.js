@@ -4,6 +4,47 @@ window.PLACE_PHOTO_MANIFEST = {
     "place-photos/day-01/d1/ahmedabad-junction.webp",
     "place-photos/day-01/d1/ahmedabad-railways-station.webp"
   ],
+  "d10a": [
+    "place-photos/day-10/d10a/1_result-1675091096703.webp",
+    "place-photos/day-10/d10a/343cb332880611ec93680a58a9feac02.jpg",
+    "place-photos/day-10/d10a/Dobhi-Paragliding-840x425.jpg",
+    "place-photos/day-10/d10a/Exterior-2-Dreams-Streams-Homestay-Dobhi-Kullu.jpg",
+    "place-photos/day-10/d10a/G0010862.jpg",
+    "place-photos/day-10/d10a/IMG_20181027_112052.jpg",
+    "place-photos/day-10/d10a/Paragliding-in-Dobhi-560x460.jpeg",
+    "place-photos/day-10/d10a/dobhi-is-one-of-the-newest.jpg",
+    "place-photos/day-10/d10a/e4b289c83e3e4101bf760e3167efe177.webp",
+    "place-photos/day-10/d10a/images.jpeg",
+    "place-photos/day-10/d10a/kullu-river-rafting.jpg",
+    "place-photos/day-10/d10a/mahadev-xtream-adventures-kullu-ho-kullu-car-hire-0ro7is58as.jpg",
+    "place-photos/day-10/d10a/nx86u6cs6nse664nb3ltacfrgbil_shutterstock_1362733667 (1).jpg",
+    "place-photos/day-10/d10a/outer-view-with-peace.jpg",
+    "place-photos/day-10/d10a/rapid-riders-manali-ho-manali-travel-agents-334o70h.jpg",
+    "place-photos/day-10/d10a/shri-krishna-adventure-136-rafting-and-paragliding-babeli-kullu-trekking-organisers-193b02ynba.webp"
+  ],
+  "d10b": [
+    "place-photos/day-10/d10b/1d3e0af6-21a7-4ff7-99f7-0c8d38fc1f30.jpeg",
+    "place-photos/day-10/d10b/Hadimba-Devi-Temple.jpg",
+    "place-photos/day-10/d10b/Hadimba_Devi_Temple_2.jpg",
+    "place-photos/day-10/d10b/Hidimba-Devi-Temple-Manali.jpg",
+    "place-photos/day-10/d10b/hidimba-temple-manali-himachal-pradesh-1-musthead-hero.jpeg",
+    "place-photos/day-10/d10b/hidimba-temple-manali-himachal-pradesh-2-attr-hero.jpeg",
+    "place-photos/day-10/d10b/hidimba-temple-manali-himachal-pradesh-5-musthead-hero.jpeg",
+    "place-photos/day-10/d10b/m_activities-manali-hidimba-devi-temple_l_400_640.jpg"
+  ],
+  "d10c": [
+    "place-photos/day-10/d10c/129084912Manali_Manu_Temple_Main.jpg",
+    "place-photos/day-10/d10c/Blue Travel Meenakshi Temple YouTube Thumbnail (21).png",
+    "place-photos/day-10/d10c/DSC4041.webp",
+    "place-photos/day-10/d10c/Manu-Temple-cover-image-840x425.jpg",
+    "place-photos/day-10/d10c/Shanshar-8.jpg",
+    "place-photos/day-10/d10c/m_Manu Temple_1_l_416_609.jpg",
+    "place-photos/day-10/d10c/manu temple kulu - manali.webp",
+    "place-photos/day-10/d10c/manu-temple-old-manali-entry-ticket-price-manali-tourism.jpg.jpg",
+    "place-photos/day-10/d10c/manu-temple.jpg",
+    "place-photos/day-10/d10c/manu-temple.webp",
+    "place-photos/day-10/d10c/uvmu66pijbizlfd9xn2bt78wgfdi_1577359509_shutterstock_1382576963.webp"
+  ],
   "d2a": [
     "place-photos/day-02/d2a/Chandigarh_junction.jpg"
   ],
