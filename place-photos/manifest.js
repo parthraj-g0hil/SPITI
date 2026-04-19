@@ -13,5 +13,23 @@ window.PLACE_PHOTO_MANIFEST = {
     "place-photos/day-02/d2b/Landscape_of_Shimla_,_Himachal_Pradesh.jpg",
     "place-photos/day-02/d2b/isbt-shimla-new-bus-stand-manali-1.webp",
     "place-photos/day-02/d2b/the-ridge.jpg"
+  ],
+  "d3a": [
+    "place-photos/day-03/d3a/531957231Jakhu_Temple_Main.jpg",
+    "place-photos/day-03/d3a/Hanuman Statue Pinterest--46691a.jpg",
+    "place-photos/day-03/d3a/Shimla_Jakhu_Temple_1622447113819.jpg",
+    "place-photos/day-03/d3a/jakhoo-temple-is-an-ancient-temple-in-shimla-dedicated-to-v0-a0ww2dmouky01.webp",
+    "place-photos/day-03/d3a/jakhu-temple.jpg",
+    "place-photos/day-03/d3a/kufri-jakhoo-temple.jpg.imgw.1280.1280.jpeg",
+    "place-photos/day-03/d3a/shimla-hills-and-jakhu.jpg"
+  ],
+  "d3b": [
+    "place-photos/day-03/d3b/296097681Narkanda_Skiing_Point_Main.jpg",
+    "place-photos/day-03/d3b/29609797Hatu.jpg",
+    "place-photos/day-03/d3b/3025753c3a7c75a810c94ddba20dd9db.jpg",
+    "place-photos/day-03/d3b/9085ac_4344798f237e478eb31fddbbb7791568~mv2.jpg",
+    "place-photos/day-03/d3b/Narkanda.jpg",
+    "place-photos/day-03/d3b/chandigarh-shimla-narkanda-chandigarh-3-night-4-days-taxi-tour-package.webp",
+    "place-photos/day-03/d3b/narkanda.jpg"
   ]
 };
